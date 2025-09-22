@@ -30,8 +30,9 @@ const pool = new Pool(poolConfig);
 pool.connect()
 .then(async () => {
     console.log("✅ Connected to PostgreSQL");
+    await createProductsTable(pool); 
     await seedProducts(pool)
-    await createProductsTable(pool);   // Create table automatically
+    // Create table automatically
 ; 
   })  .catch((err) => {
     console.error(" Database connection error:", err.message);
