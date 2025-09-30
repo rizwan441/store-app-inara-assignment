@@ -114,7 +114,9 @@ if(loading) return <Loader />;
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">${product.price}</td>
                 <td className="border px-4 py-2">{product.stock}</td>
-                  <td className="border px-4 py-2">{product.description}</td>
+<td>
+  <div dangerouslySetInnerHTML={{ __html: product.description }} />
+</td>
 
 
                 <td className="border px-4 py-2">

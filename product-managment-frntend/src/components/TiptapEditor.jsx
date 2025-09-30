@@ -28,29 +28,31 @@ export default function TiptapEditor({ value, onChange }) {
   return (
     <div className="border rounded">
       {/* Toolbar */}
-      <div className="flex gap-2 border-b p-2 bg-gray-100">
-        <button onClick={() => editor.chain().focus().toggleBold().run()} className="px-2 py-1">B</button>
-        <button onClick={() => editor.chain().focus().toggleItalic().run()} className="px-2 py-1 italic">I</button>
-        <button onClick={() => editor.chain().focus().toggleUnderline().run()} className="px-2 py-1 underline">U</button>
+    <div className="flex gap-2 border-b p-2 bg-gray-100">
+  <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className="px-2 py-1">B</button>
+  <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className="px-2 py-1 italic">I</button>
+  <button type="button" onClick={() => editor.chain().focus().toggleUnderline().run()} className="px-2 py-1 underline">U</button>
 
-        <button onClick={() => editor.chain().focus().toggleBulletList().run()} className="px-2 py-1">• List</button>
-        <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className="px-2 py-1">1. List</button>
+  <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className="px-2 py-1">• List</button>
+  <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className="px-2 py-1">1. List</button>
 
-        <button
-          onClick={() => {
-            const url = prompt("Enter URL");
-            if (url) {
-              editor.chain().focus().setLink({ href: url }).run();
-            }
-          }}
-          className="px-2 py-1 text-blue-600"
-        >
-          Link
-        </button>
-      </div>
+  <button
+    type="button"
+    onClick={() => {
+      const url = prompt("Enter URL");
+      if (url) {
+        editor.chain().focus().setLink({ href: url }).run();
+      }
+    }}
+    className="px-2 py-1 text-blue-600"
+  >
+    Link
+  </button>
+</div>
+
 
       {/* Editor */}
-      <div className="p-2 min-h-[120px]">
+      <div className="p-2 min-h-[120px] tiptap-editor">
         <EditorContent editor={editor} />
       </div>
     </div>
