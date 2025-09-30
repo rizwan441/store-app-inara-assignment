@@ -5,6 +5,7 @@ node_modules/
 .env
 
 # Uploaded images
+
 # Logs
 logs/
 *.log

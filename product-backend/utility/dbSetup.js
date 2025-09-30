@@ -1,4 +1,3 @@
-// dbSetup.js
 async function createProductsTable(pool) {
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS products (

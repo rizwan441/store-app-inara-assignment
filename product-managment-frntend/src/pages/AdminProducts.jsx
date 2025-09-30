@@ -1,40 +1,43 @@
 import React, { useContext, useState } from "react";
-// import { ProductContext } from "../context/ProductProvider";
 import { Dialog } from "@headlessui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
 import { useProducts } from "../context/ProductProvider";
+import TiptapEditor from "../components/TiptapEditor";
+import Loader from "../components/Loader";
 
 
 export default function AdminProducts() {
-  const { products, createProduct, editProduct, removeProduct } = useProducts();
+  const { products,loading, createProduct, editProduct, removeProduct } = useProducts();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(products.length / itemsPerPage);
 
   const ProductSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+name: Yup.string()
+  .trim("Name cannot be empty or just spaces")
+  .strict(true) 
+  .required("Name is required"),
     price: Yup.number().required("Price is required").positive("Must be > 0"),
-    stock: Yup.number().required("Stock is required").min(0, "Must be >= 0"),
+    stock: Yup.number().required("Stock is required").min(0, "Must be >= 0").integer("Must be an integer"),
     image: Yup.string().required("Image URL is required"),
-    description: Yup.string().required("Description is required"),
+    description: Yup.string() .trim("Name cannot be empty or just spaces")
+  .strict(true).required("Description is required"),
   });
 
 const handleSubmit = async (values, { resetForm }) => {
   try {
     if (selectedProduct) {
-      // 🔹 Update product
-      await editProduct(selectedProduct.id, values); // <— send plain values
+      await editProduct(selectedProduct.id, values);
       toast.success("Product updated successfully!");
     } else {
-      // 🔹 Add product
-      await createProduct(values); // <— send plain values
+     
+      await createProduct(values); 
       toast.success("Product added successfully!");
     }
 
@@ -47,7 +50,6 @@ const handleSubmit = async (values, { resetForm }) => {
   }
 };
 
-// ✅ Handle delete
 const handleDelete = async (id) => {
   if (window.confirm("Are you sure you want to delete this product?")) {
     try {
@@ -60,25 +62,21 @@ const handleDelete = async (id) => {
   }
 };
 
-// ✅ Open add modal
 const openAddModal = () => {
   setSelectedProduct(null);
   setIsOpen(true);
 };
 
-// ✅ Open edit modal
 const openEditModal = (product) => {
   setSelectedProduct(product);
   setIsOpen(true);
 };
 
-  // Slice products for current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
-
+if(loading) return <Loader />;
   return (
     <div className="p-6">
-      {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Admin – Manage Products</h1>
         <button
@@ -89,7 +87,6 @@ const openEditModal = (product) => {
         </button>
       </div>
 
-      {/* Products Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300">
           <thead className="bg-gray-100">
@@ -98,7 +95,10 @@ const openEditModal = (product) => {
               <th className="border px-4 py-2 text-left">Name</th>
               <th className="border px-4 py-2 text-left">Price</th>
               <th className="border px-4 py-2 text-left">Stock</th>
+               <th className="border px-4 py-2 text-left">Description</th>
+
               <th className="border px-4 py-2 text-left">Actions</th>
+
             </tr>
           </thead>
           <tbody>
@@ -114,6 +114,9 @@ const openEditModal = (product) => {
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">${product.price}</td>
                 <td className="border px-4 py-2">{product.stock}</td>
+                  <td className="border px-4 py-2">{product.description}</td>
+
+
                 <td className="border px-4 py-2">
                   <button
                     onClick={() => openEditModal(product)}
@@ -141,7 +144,6 @@ const openEditModal = (product) => {
         </table>
       </div>
 
-      {/* Pagination Controls */}
       <div className="flex justify-center items-center mt-4 space-x-2">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -172,7 +174,6 @@ const openEditModal = (product) => {
         </button>
       </div>
 
-      {/* Add Product Modal */}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -191,12 +192,10 @@ const openEditModal = (product) => {
     description: selectedProduct?.description || "",
   }}
   validationSchema={ProductSchema}
-     // 👈 IMPORTANT! tells Formik to update when props change
   onSubmit={handleSubmit}
 >
               {({ isSubmitting ,setFieldValue}) => (
                 <Form className="space-y-4">
-                  {/* Name */}
                   <div>
                     <label className="block font-medium">Name</label>
                     <Field
@@ -211,7 +210,6 @@ const openEditModal = (product) => {
                     />
                   </div>
 
-                  {/* Price */}
                   <div>
                     <label className="block font-medium">Price</label>
                     <Field
@@ -226,7 +224,6 @@ const openEditModal = (product) => {
                     />
                   </div>
 
-                  {/* Stock */}
                   <div>
                     <label className="block font-medium">Stock</label>
                     <Field
@@ -241,7 +238,6 @@ const openEditModal = (product) => {
                     />
                   </div>
 
-                  {/* Image */}
                  <div>
   <label className="block font-medium">Image</label>
   <input
@@ -250,7 +246,7 @@ const openEditModal = (product) => {
     accept="image/*"
     onChange={(e) => {
       const file = e.currentTarget.files[0];
-      setFieldValue("image", file); // 👈 tell Formik about the file
+      setFieldValue("image", file); 
     }}
     className="w-full border px-3 py-2 rounded"
   />
@@ -261,15 +257,17 @@ const openEditModal = (product) => {
   />
 </div>
 
-                  {/* Description */}
                   <div>
                     <label className="block font-medium">Description</label>
-                    <Field
-                      as="textarea"
-                      name="description"
-                      className="w-full border px-3 py-2 rounded"
-                      rows="3"
-                    />
+                  <Field name="description">
+  {({ field, form }) => (
+    <TiptapEditor
+      value={field.value}
+      onChange={(val) => form.setFieldValue("description", val)}
+    />
+  )}
+</Field>
+
                     <ErrorMessage
                       name="description"
                       component="div"
@@ -277,7 +275,6 @@ const openEditModal = (product) => {
                     />
                   </div>
 
-                  {/* Buttons */}
                   <div className="flex justify-end space-x-2">
                     <button
                       type="button"

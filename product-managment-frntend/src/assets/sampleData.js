@@ -1,4 +1,3 @@
-// src/assets/sampleData.js
 export const sampleProducts = [
   {
     id: '1',

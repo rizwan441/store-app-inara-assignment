@@ -1,4 +1,3 @@
-// seed.js
 const defaultProducts = [
   {
     name: "Laptop",

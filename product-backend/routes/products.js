@@ -32,7 +32,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ✅ Add new product (with image upload)
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { name, price, stock, description } = req.body;
@@ -51,11 +50,10 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// ✅ Update product
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const { name, price, stock, description } = req.body;
-    let imageUrl = req.body.existingImage; // keep old image if not replaced
+    let imageUrl = req.body.existingImage; 
     if (req.file) {
       imageUrl = `/uploads/${req.file.filename}`;
     }
@@ -72,7 +70,6 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// ✅ Delete product
 router.delete("/:id", async (req, res) => {
   try {
     const result = await pool.query(

@@ -8,14 +8,13 @@ const { createProductsTable } = require("./utility/dbSetup");
 
 
 
-dotenv.config(); // Load .env variables
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads")); // Serve uploaded images
+app.use("/uploads", express.static("uploads")); 
 
-// ---- PostgreSQL Connection ----
 const poolConfig = {
   host: process.env.DB_HOST || "localhost",
   port: process.env.DB_PORT || 5432,
@@ -26,7 +25,6 @@ const poolConfig = {
 
 const pool = new Pool(poolConfig);
 
-// Test the connection on startup
 pool.connect()
 .then(async () => {
     console.log("✅ Connected to PostgreSQL");
