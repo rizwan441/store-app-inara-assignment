@@ -1,0 +1,16 @@
+/* Tiptap basic styles */
+.tiptap-editor p {
+  margin: 0;
+}
+
+.tiptap-editor strong {
+  font-weight: bold;
+}
+
+.tiptap-editor em {
+  font-style: italic;
+}
+
+.tiptap-editor u {
+  text-decoration: underline;
+}

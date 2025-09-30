@@ -76,7 +76,12 @@ export default function ProductDetail() {
           ${product.price}
         </p>
         <p className="text-gray-700 mb-4">Stock: {product.stock}</p>
-        <p className="leading-relaxed text-gray-700">{product.description}</p>
+        <div
+  className="leading-relaxed text-gray-700"
+  dangerouslySetInnerHTML={{ __html: product.description }}
+/>
+
+
       </div>
     </div>
   </div>

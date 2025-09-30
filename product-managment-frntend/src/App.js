@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useProducts } from "../src/context/ProductProvider";
 import Loader from "./components/Loader";
+import './App.css'
 
 
 function App() {
